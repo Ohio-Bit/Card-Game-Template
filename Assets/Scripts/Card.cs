@@ -26,10 +26,6 @@ public class Card : MonoBehaviour
     void Start()
     {
         card_name = data.card_name;
-        description = data.description;
-        health = data.health;
-        cost = data.cost;
-        damage = data.damage;
         sprite = data.sprite;
         nameText.text = card_name;
         descriptionText.text = description;

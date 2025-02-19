@@ -6,10 +6,8 @@ using UnityEngine;
 public class Card_data : ScriptableObject
 {
     public string card_name;
-    public string description;
-    public int health;
-    public int cost;
-    public int damage;
     public Sprite sprite;
-
+    public string rank;
+    public string suit;
+    
 }
