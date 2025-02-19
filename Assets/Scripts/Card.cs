@@ -33,7 +33,6 @@ public class Card : MonoBehaviour
         costText.text = cost.ToString();
         damageText.text = damage.ToString();
         spriteImage.sprite = sprite;
-
     }
 
     // Update is called once per frame
