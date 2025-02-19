@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card_name: 
   sprite: {fileID: 1553206685601476101, guid: 1980146be59b348488e79b2b09aadfa7, type: 3}
-  Suit: Diamond
-  Rank: 2
+  rank: 2
+  suit: diamond

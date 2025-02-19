@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card_name: 
   sprite: {fileID: -504760231257094221, guid: c0d97ef6e7a334ea4b1350f1636d2691, type: 3}
-  Suit: Spades
-  Rank: 8
+  rank: 8
+  suit: spade

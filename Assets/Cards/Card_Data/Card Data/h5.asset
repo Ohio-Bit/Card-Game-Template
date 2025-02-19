@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card_name: 
   sprite: {fileID: 422122904436706541, guid: a52c551ddde4a4cbb8cae582d200128a, type: 3}
-  Suit: Hearts
-  Rank: 5
+  rank: 5
+  suit: health
