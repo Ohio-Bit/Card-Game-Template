@@ -26,10 +26,6 @@ public class Card : MonoBehaviour
     void Start()
     {
         card_name = data.card_name;
-        description = data.description;
-        health = data.health;
-        cost = data.cost;
-        damage = data.damage;
         sprite = data.sprite;
         nameText.text = card_name;
         descriptionText.text = description;
@@ -37,7 +33,6 @@ public class Card : MonoBehaviour
         costText.text = cost.ToString();
         damageText.text = damage.ToString();
         spriteImage.sprite = sprite;
-
     }
 
     // Update is called once per frame
