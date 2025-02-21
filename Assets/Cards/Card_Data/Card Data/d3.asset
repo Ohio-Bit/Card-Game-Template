@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
   m_Name: d3
   m_EditorClassIdentifier: 
-  card_name: 
-  sprite: {fileID: 6285911172279501506, guid: 1aa6df4dbbd454b2896af2b31cbe6cfd, type: 3}
-  rank: 3
   suit: diamond
+  sprite: {fileID: -3928262809992104817, guid: 2e5201a1bc9f143bf91acfb63e267477, type: 3}
+  rank: 3
+  value: 3

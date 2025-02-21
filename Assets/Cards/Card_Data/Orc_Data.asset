@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
   m_Name: Orc_Data
   m_EditorClassIdentifier: 
-  card_name: Orc
-  description: Likes to swing an Axe
-  health: 3
-  cost: 2
-  damage: 2
+  suit: Heart
   sprite: {fileID: 21300000, guid: d5ece8b70c4be4f1a99847e09387c1e1, type: 3}
+  rank: King
+  value: 13
