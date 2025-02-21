@@ -8,30 +8,31 @@ public class Card : MonoBehaviour
 {
     public Card_data data;
 
-    public string card_name;
+    public string suit;
     public string description;
     public int health;
     public int cost;
-    public int damage;
+    public int value;
     public Sprite sprite;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI costText;
-    public TextMeshProUGUI damageText;
+    public TextMeshProUGUI valueText;
     public Image spriteImage;
         
 
     // Start is called before the first frame update
     void Start()
     {
-        card_name = data.card_name;
+        value = data.value;
+        suit = data.suit;
         sprite = data.sprite;
-        nameText.text = card_name;
+        nameText.text = suit;
         descriptionText.text = description;
         healthText.text = health.ToString();
         costText.text = cost.ToString();
-        damageText.text = damage.ToString();
+        valueText.text = value.ToString();
         spriteImage.sprite = sprite;
     }
 
