@@ -39,4 +39,17 @@ public class Card : MonoBehaviour
     {
         
     }
+
+    public GameObject CreateCardObject()
+    {
+        GameObject cardObj = new GameObject($"Card_{suit}_{rank}");
+        SpriteRenderer spriteRenderer = cardObj.AddComponent<SpriteRenderer>();
+        
+        // Assuming you have card sprites named appropriately
+        string spritePath = $"Cards/{suit}_{rank}"; // Adjust path according to your project structure
+        Sprite cardSprite = Resources.Load<Sprite>(spritePath);
+        spriteRenderer.sprite = cardSprite;
+        
+        return cardObj;
+    }
 }
