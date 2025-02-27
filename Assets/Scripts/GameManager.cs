@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Shuffle();
+        Deal();
     }
 
     // Update is called once per frame
@@ -35,17 +36,47 @@ public class GameManager : MonoBehaviour
 
     void Deal()
     {
+        // Deal 2 cards to player
+        for (int i = 0; i < 2; i++)
+        {
+            player_hand.Add(deck[0]);
+            deck.RemoveAt(0);
+        }
 
+        // Deal 2 cards to AI
+        for (int i = 0; i < 2; i++)
+        {
+            ai_hand.Add(deck[0]);
+            deck.RemoveAt(0);
+        }
     }
 
     void Shuffle()
     {
-
+        for (int i = deck.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            Card temp = deck[i];
+            deck[i] = deck[randomIndex];
+            deck[randomIndex] = temp;
+        }
     }
 
     void AI_Turn()
     {
 
+    }
+
+    void Hit()
+    {
+        player_hand.Add(deck[0]);
+        deck.RemoveAt(0);
+    }
+
+    void AI_Hit()
+    {
+        ai_hand.Add(deck[0]);
+        deck.RemoveAt(0);
     }
 
 
