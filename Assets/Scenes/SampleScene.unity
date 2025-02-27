@@ -1384,6 +1384,15 @@ MonoBehaviour:
   - {fileID: 1093965442}
   player_hand: []
   ai_hand: []
+  noplayerace: 1
+  aceplayervalue: 11
+  noAIace: 1
+  aceAIvalue: 11
+  gameCanvas: {fileID: 0}
+  playerHandStartPosition: {x: -2, y: -3}
+  cardOffset: 0.5
+  cardPrefab: {fileID: 139944937306382617, guid: 99ef4bccd68e84d9ba6e7c8051daf70b, type: 3}
+  cardParent: {fileID: 0}
 --- !u!4 &622756966
 Transform:
   m_ObjectHideFlags: 0

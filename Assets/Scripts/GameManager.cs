@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
+// using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,9 +16,12 @@ public class GameManager : MonoBehaviour
     public bool noAIace = true;
     public int aceAIvalue = 11;
 
-    [SerializeField] private Vector3 playerHandStartPosition = new Vector3(-2f, -3f, 0f); // Adjust these values as needed
-    [SerializeField] private float cardOffset = 0.5f; // Horizontal spacing between cards
+    [SerializeField] private Canvas gameCanvas; // Reference to your main canvas
+    [SerializeField] private Vector2 playerHandStartPosition = new Vector2(100f, 100f); // Update to use Vector2 for UI positioning
+    [SerializeField] private float cardOffset = 100f; // Increased offset for UI space
     private List<GameObject> playerCardObjects = new List<GameObject>();
+    [SerializeField] private GameObject cardPrefab; // Assign your card prefab in the inspector
+    [SerializeField] private Transform cardParent; // Optional: parent transform to keep cards organized
 
     private void Awake()
     {
@@ -61,8 +65,19 @@ public class GameManager : MonoBehaviour
         // Deal 2 cards to player
         for (int i = 0; i < 2; i++)
         {
-            player_hand.Add(deck[0]);
+            Card currentCard = deck[0];
+            player_hand.Add(currentCard);
             deck.RemoveAt(0);
+
+            // Instantiate the card visually as UI element
+            GameObject cardObject = Instantiate(cardPrefab, gameCanvas.transform);
+            RectTransform rectTransform = cardObject.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = playerHandStartPosition + new Vector2(playerCardObjects.Count * cardOffset, 0f);
+            
+            Card cardComponent = cardObject.GetComponent<Card>();
+            cardComponent.data = currentCard.data;
+            
+            playerCardObjects.Add(cardObject);
         }
 
         // Deal 2 cards to AI
@@ -77,7 +92,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = deck.Count - 1; i > 0; i--)
         {
-            int randomIndex = Random.Range(0, i + 1);
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
             Card temp = deck[i];
             deck[i] = deck[randomIndex];
             deck[randomIndex] = temp;
@@ -100,9 +115,11 @@ public class GameManager : MonoBehaviour
 
     void Hit()
     {
-        player_hand.Add(deck[0]);
+        Card currentCard = deck[0];
+        player_hand.Add(currentCard);
         deck.RemoveAt(0);
         PlayerBust();
+        
         foreach (Card card in player_hand)
         {
             if (card.rank == "Ace")
@@ -112,18 +129,24 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Create the visual representation of the card
-        GameObject cardObject = deck[0].CreateCardObject(); // Assuming you have a method to create card GameObjects
-        cardObject.transform.position = playerHandStartPosition + new Vector3(playerCardObjects.Count * cardOffset, 0f, 0f);
+        // Instantiate the card visually as UI element
+        GameObject cardObject = Instantiate(cardPrefab, gameCanvas.transform);
+        RectTransform rectTransform = cardObject.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = playerHandStartPosition + new Vector2(playerCardObjects.Count * cardOffset, 0f);
+        
+        Card cardComponent = cardObject.GetComponent<Card>();
+        cardComponent.data = currentCard.data;
         
         playerCardObjects.Add(cardObject);
     }
 
     void AI_Hit()
     {
-        ai_hand.Add(deck[0]);
+        Card currentCard = deck[0];
+        ai_hand.Add(currentCard);
         deck.RemoveAt(0);
         AIBust();
+        
         foreach (Card card in ai_hand)
         {
             if (card.rank == "Ace")
@@ -133,9 +156,13 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Create the visual representation of the card
-        GameObject cardObject = deck[0].CreateCardObject(); // Assuming you have a method to create card GameObjects
-        cardObject.transform.position = playerHandStartPosition + new Vector3(playerCardObjects.Count * cardOffset, 0f, 0f);
+        // Instantiate the card visually as UI element
+        GameObject cardObject = Instantiate(cardPrefab, gameCanvas.transform);
+        RectTransform rectTransform = cardObject.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = playerHandStartPosition + new Vector2(playerCardObjects.Count * cardOffset, 0f);
+        
+        Card cardComponent = cardObject.GetComponent<Card>();
+        cardComponent.data = currentCard.data;
         
         playerCardObjects.Add(cardObject);
     }
