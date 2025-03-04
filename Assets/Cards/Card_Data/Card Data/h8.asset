@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   suit: health
   sprite: {fileID: -6212091817297008591, guid: 5a01a85917b804a2da4969a11aa8b865, type: 3}
-  rank: 8
+  rank: Eight
   value: 8
