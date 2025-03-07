@@ -36,6 +36,12 @@ public class GameManager : MonoBehaviour
     private int aiWins = 0;
     private bool gameEnded = false;
     private List<Card> discardPile = new List<Card>();
+    private int playerTokens = 500;
+    private int currentBet = 0;
+    [SerializeField] private TextMeshProUGUI tokenText;
+    [SerializeField] private TMP_InputField betInput;
+    [SerializeField] private GameObject bettingUI; // Parent object containing betting UI elements
+    [SerializeField] private TextMeshProUGUI currentBetText;
 
     private void Awake()
     {
@@ -55,12 +61,13 @@ public class GameManager : MonoBehaviour
         InitializeDeck();
         if (deck.Count > 0)
         {
-            InitializeGame();
+            ShowBettingUI();
         }
         else
         {
             Debug.LogError("Failed to initialize deck!");
         }
+        UpdateTokenDisplay();
     }
 
     void InitializeDeck()
@@ -79,13 +86,9 @@ public class GameManager : MonoBehaviour
 
     void InitializeGame()
     {
-        // Now we clear the visual cards at the start of a new game
-        ClearHandDisplays();
-        
-        // Clear hands
+        // Clear hands but keep visuals until new cards are dealt
         player_hand.Clear();
         ai_hand.Clear();
-        gameEnded = false;
         
         if (winnerText != null)
             winnerText.text = "";
@@ -198,10 +201,28 @@ public class GameManager : MonoBehaviour
             {
                 Stay();
             }
+
+            // Add betting input when betting UI is active
+            if (bettingUI != null && bettingUI.activeSelf)
+            {
+                // Handle arrow key betting
+                if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    AdjustBet(50);
+                }
+                if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    AdjustBet(-50);
+                }
+                if (Input.GetKeyDown(KeyCode.B))
+                {
+                    PlaceBet();
+                }
+            }
         }
         else if (Input.GetKeyDown(KeyCode.R)) // Only allow restart if game has ended
         {
-            RestartGame();
+            PrepareNextRound();
         }
     }
 
@@ -214,6 +235,9 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Not enough cards to deal!");
             return;
         }
+
+        // Clear previous cards just before dealing new ones
+        ClearHandDisplays();
 
         // Deal 2 cards to player
         for (int i = 0; i < 2; i++)
@@ -498,10 +522,11 @@ public class GameManager : MonoBehaviour
         MoveToDiscardPile(player_hand);
         MoveToDiscardPile(ai_hand);
         
-        // Only check if we need to reshuffle
         CheckDeckSize();
         
-        InitializeGame();
+        // Now we only clear displays when actually restarting
+        ClearHandDisplays();
+        PrepareNextRound();
     }
 
     void MoveToDiscardPile(List<Card> cards)
@@ -538,25 +563,30 @@ public class GameManager : MonoBehaviour
         {
             winner = "AI Wins!";
             aiWins++;
+            // Player loses their bet (already removed)
         }
         else if (aiTotal > 21)
         {
             winner = "Player Wins!";
             playerWins++;
+            playerTokens += currentBet * 2; // Return bet plus winnings
         }
         else if (playerTotal > aiTotal)
         {
             winner = "Player Wins!";
             playerWins++;
+            playerTokens += currentBet * 2; // Return bet plus winnings
         }
         else if (aiTotal > playerTotal)
         {
             winner = "AI Wins!";
             aiWins++;
+            // Player loses their bet (already removed)
         }
         else
         {
             winner = "It's a Tie!";
+            playerTokens += currentBet; // Return bet on tie
         }
 
         if (winnerText != null)
@@ -564,17 +594,25 @@ public class GameManager : MonoBehaviour
             winnerText.text = winner;
         }
         
+        UpdateTokenDisplay();
+        
         // Move cards to discard pile (but keep visuals)
         MoveToDiscardPile(player_hand);
         MoveToDiscardPile(ai_hand);
         
         Debug.Log($"Round ended. Discard pile now has {discardPile.Count} cards, Deck has {deck.Count} cards");
         
-        // Check if deck needs reshuffling after moving cards to discard
         CheckDeckSize();
         
         UpdateScoreDisplay();
         gameEnded = true;
+
+        // Check if player is out of tokens
+        if (playerTokens <= 0)
+        {
+            winnerText.text = "Game Over - Out of tokens!";
+            return;
+        }
     }
 
     void CheckDeckSize()
@@ -588,5 +626,102 @@ public class GameManager : MonoBehaviour
             Shuffle();
             Debug.Log($"Deck now has {deck.Count} cards after shuffling");
         }
+    }
+
+    void ShowBettingUI()
+    {
+        if (bettingUI != null)
+            bettingUI.SetActive(true);
+        if (betInput != null)
+            betInput.text = "50"; // Default bet
+        UpdateTokenDisplay();
+        UpdateCurrentBetText();
+    }
+
+    void HideBettingUI()
+    {
+        if (bettingUI != null)
+            bettingUI.SetActive(false);
+    }
+
+    void UpdateTokenDisplay()
+    {
+        if (tokenText != null)
+            tokenText.text = $"Tokens: {playerTokens}";
+    }
+
+    void UpdateCurrentBetText()
+    {
+        if (currentBetText != null)
+        {
+            if (betInput != null && int.TryParse(betInput.text, out int potentialBet))
+            {
+                currentBetText.text = $"Bet Amount: {potentialBet}";
+            }
+            else
+            {
+                currentBetText.text = "Bet Amount: 0";
+            }
+        }
+    }
+
+    public void PlaceBet()
+    {
+        if (betInput == null) return;
+
+        if (int.TryParse(betInput.text, out int bet))
+        {
+            if (bet <= 0)
+            {
+                Debug.LogWarning("Bet must be greater than 0!");
+                return;
+            }
+
+            if (bet > playerTokens)
+            {
+                Debug.LogWarning("Not enough tokens!");
+                return;
+            }
+
+            currentBet = bet;
+            playerTokens -= bet;
+            UpdateTokenDisplay();
+            HideBettingUI();
+            InitializeGame();
+        }
+        else
+        {
+            Debug.LogWarning("Invalid bet amount!");
+        }
+    }
+
+    void PrepareNextRound()
+    {
+        gameEnded = false;
+        if (winnerText != null)
+            winnerText.text = "";
+        
+        // Don't clear the cards yet
+        ShowBettingUI();
+    }
+
+    void AdjustBet(int amount)
+    {
+        int currentAmount = 50; // Default amount
+        if (int.TryParse(betInput.text, out int current))
+        {
+            currentAmount = current;
+        }
+
+        // Calculate new bet amount
+        int newAmount = currentAmount + amount;
+
+        // Ensure bet doesn't go below 50 or above player's tokens
+        newAmount = Mathf.Max(50, newAmount); // Minimum bet of 50
+        newAmount = Mathf.Min(newAmount, playerTokens); // Can't bet more than you have
+
+        // Update the bet input field
+        betInput.text = newAmount.ToString();
+        UpdateCurrentBetText();
     }
 }
