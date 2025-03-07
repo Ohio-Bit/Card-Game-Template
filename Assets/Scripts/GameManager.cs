@@ -232,6 +232,7 @@ public class GameManager : MonoBehaviour
             RectTransform rectTransform = cardObject.GetComponent<RectTransform>();
             rectTransform.anchoredPosition = playerHandStartPosition + new Vector2(playerCardObjects.Count * cardOffset, 0f);
             
+            
             Card cardComponent = cardObject.GetComponent<Card>();
             cardComponent.data = currentCard.data;
             
@@ -239,7 +240,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Deal 2 cards to AI
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 1; i++)
         {
             Card currentCard = deck[0];
             if (currentCard.rank == "Ace")
