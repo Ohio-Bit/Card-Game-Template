@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_InputField betInput;
     [SerializeField] private GameObject bettingUI; // Parent object containing betting UI elements
     [SerializeField] private TextMeshProUGUI currentBetText;
+    private bool gameStarted = false;
 
     private void Awake()
     {
@@ -192,12 +193,13 @@ public class GameManager : MonoBehaviour
     {
         if (!gameEnded)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            // Only allow hit if betting UI is not active and game has started
+            if (Input.GetKeyDown(KeyCode.Space) && !bettingUI.activeSelf && gameStarted)
             {
                 Hit();
             }
 
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return) && gameStarted)
             {
                 Stay();
             }
@@ -287,6 +289,7 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateTotals();
+        gameStarted = true;
     }
 
     void Shuffle()
@@ -698,10 +701,10 @@ public class GameManager : MonoBehaviour
     void PrepareNextRound()
     {
         gameEnded = false;
+        gameStarted = false;
         if (winnerText != null)
             winnerText.text = "";
         
-        // Don't clear the cards yet
         ShowBettingUI();
     }
 
